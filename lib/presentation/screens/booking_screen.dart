@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'customer_tracking_screen.dart';
+
 class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
 
@@ -55,7 +57,7 @@ class _BookingScreenState extends State<BookingScreen> {
       return;
     }
 
-    // ⭐ COMBINE DATE + TIME (IMPORTANT)
+    // combine date + time
     final scheduledDateTime = DateTime(
       selectedDate!.year,
       selectedDate!.month,
@@ -64,26 +66,39 @@ class _BookingScreenState extends State<BookingScreen> {
       selectedTime!.minute,
     );
 
-    await FirebaseFirestore.instance.collection("rides").add({
+    // ⭐ SMART LOGIC
+    // If booking time is within 5 minutes → instant ride
+    final now = DateTime.now();
+    final difference = scheduledDateTime.difference(now).inMinutes;
+
+    final bool instantRide = difference <= 5;
+
+    final docRef = await FirebaseFirestore.instance.collection("rides").add({
       "customerId": user.uid,
       "guardId": guardId,
-
-      // ⭐ SCHEDULED BOOKING
-      "status": "scheduled",
-
+      "status": instantRide ? "pending" : "scheduled",
       "scheduledTime": Timestamp.fromDate(scheduledDateTime),
-
       "latitude": userPosition!.latitude,
       "longitude": userPosition!.longitude,
-
       "timestamp": FieldValue.serverTimestamp(),
     });
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Booking Scheduled Successfully")),
-    );
+    // ⭐ IF INSTANT → TRACKING SCREEN
+    if (instantRide) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => CustomerTrackingScreen(rideId: docRef.id),
+        ),
+      );
+    } else {
+      // ⭐ IF SCHEDULED → STAY HERE
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Booking Scheduled Successfully")),
+      );
+    }
   }
 
   // ================= UI =================
