@@ -1,0 +1,48 @@
+{
+    "project_info": {
+      "project_number": "823292998309",
+      "project_id": "zaburb-guard",
+      "storage_bucket": "zaburb-guard.firebasestorage.app"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:823292998309:android:fea90eb1355f4dee50534c",
+          "android_client_info": {
+            "package_name": "com.example.customer_app"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyAR2Yho8HAZTZWm56LwN8mUzndFt33RXqQ"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:823292998309:android:9d5e40a4f8053de750534c",
+          "android_client_info": {
+            "package_name": "com.example.guard_app"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyAR2Yho8HAZTZWm56LwN8mUzndFt33RXqQ"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
