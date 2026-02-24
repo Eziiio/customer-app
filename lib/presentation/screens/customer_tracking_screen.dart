@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'booking_screen.dart'; // ⭐ add this
+import 'ride_complete_screen.dart';
 
 class CustomerTrackingScreen extends StatelessWidget {
   final String rideId;
@@ -39,29 +39,20 @@ class CustomerTrackingScreen extends StatelessWidget {
           }
 
           /// =====================
-          /// REJECTED → AUTO RETURN
+          /// REJECTED
           /// =====================
           if (status == "rejected") {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const BookingScreen()),
-                (route) => false,
-              );
-            });
-
-            return const SizedBox();
+            return const Center(child: Text("Guard rejected the request"));
           }
 
           /// =====================
-          /// COMPLETED → AUTO RETURN
+          /// COMPLETED → OPEN STATIC SCREEN
           /// =====================
           if (status == "completed") {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushAndRemoveUntil(
+            Future.microtask(() {
+              Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => const BookingScreen()),
-                (route) => false,
+                MaterialPageRoute(builder: (_) => const RideCompleteScreen()),
               );
             });
 
@@ -69,7 +60,7 @@ class CustomerTrackingScreen extends StatelessWidget {
           }
 
           /// =====================
-          /// ACCEPTED → TRACK GUARD
+          /// ACCEPTED → LIVE TRACKING
           /// =====================
           if (status == "accepted") {
             final guardId = ride["guardId"];
